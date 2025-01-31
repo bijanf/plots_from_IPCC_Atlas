@@ -51,7 +51,7 @@ def plot_topo_only_land():
         grid="@earth_relief_30s",
         region=[minlon, maxlon, minlat, maxlat],
         projection="M6i",
-        shading=0.05,
+        shading=0.001,
         frame='a'
     )
 
