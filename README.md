@@ -86,10 +86,10 @@ Run the scripts directly after ensuring the required NetCDF files are in the exp
 
 ## Visualization Example
 
-Below is an example of the precipitation trend plot:
+Below is an example of the precipitation trend plot and the topography:
 
 ![Example Precipitation Trend Plot](precipitation_trend_central_asia.png)
-
+![Example of the Topography](central_asia_land_topo.pdf)
 ---
 
 ## License

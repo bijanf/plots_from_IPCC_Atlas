@@ -94,7 +94,7 @@ def plot_topo_only_land():
         )
 
     # Save the figure
-    fig.savefig("central_asia_land_topo.pdf", crop=True, dpi=300)
+    fig.savefig("central_asia_land_topo.png", crop=True, dpi=300)
 
 if __name__ == "__main__":
     plot_topo_only_land()
