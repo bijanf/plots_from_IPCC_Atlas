@@ -52,7 +52,7 @@ def plot_topo_only_land():
         region=[minlon, maxlon, minlat, maxlat],
         projection="M6i",
         shading=0.05,
-        frame=True
+        frame='a'
     )
 
     # Paint large water bodies in the specified color
@@ -66,7 +66,7 @@ def plot_topo_only_land():
         water="#cfe6f5",  # Water bodies color
         lakes="#cfe6f5",
         area_thresh="90000",  # skip small lakes
-        frame=False
+        frame="a"
     )
 
     # Add a color bar with custom elevation labels
