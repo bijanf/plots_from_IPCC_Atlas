@@ -93,6 +93,22 @@ def plot_topo_only_land():
             justify="CM"
         )
 
+    # Label major mountain ranges in dark red
+    mountain_positions = {
+        "Tien Shan": (79, 42),
+        "Pamir":     (72, 38.5),
+    }
+
+    for mountain, (mx, my) in mountain_positions.items():
+        fig.text(
+            x=mx, y=my,
+            text=mountain,
+            region=[minlon, maxlon, minlat, maxlat],
+            projection="M6i",
+            font="10p,Helvetica-Bold,#8B0000",  # Dark red, bold
+            justify="CM"
+        )
+
     # Save the figure
     fig.savefig("central_asia_land_topo.png", crop=True, dpi=300)
 
