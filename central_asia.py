@@ -99,9 +99,10 @@ def plot_topo_only_land():
         # Water bodies (negative elevation) will be colored separately
         elev_clipped = np.clip(elev_data, 0, 8000)
 
-        # Create a mask for Caspian Sea only (large water body with elevation < -20m)
-        # Small negative values on land should keep their terrain color
-        water_mask = elev_data < -20
+        # Create a mask for Caspian Sea only (elevation around -28m)
+        # Use a very specific range to avoid coloring other depressions
+        # Caspian Sea is below -25m, other lakes are at higher elevations
+        water_mask = (elev_data < -25) & (lons[np.newaxis, :] < 55) & (lats[:, np.newaxis] > 36) & (lats[:, np.newaxis] < 48)
 
         # Create RGB from colormap
         rgb = cmap_elev(norm_elev(elev_clipped))
