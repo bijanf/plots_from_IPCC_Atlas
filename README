@@ -18,8 +18,10 @@ Snowfall at global warming levels (book Fig. 2.8)
 Fig. 2.8 shows the change in annual mean snowfall (mm per day, water equivalent) at
 +2 degC (SSP2-4.5, 29 models), +3 degC (SSP3-7.0, 23 models) and +4 degC (SSP5-8.5,
 18 models) relative to 1981-2010, CMIP6 multi-model mean. Dots mark grid cells without
-a robust signal (IPCC AR6 advanced method: 66 % or fewer of the models show a change
-larger than internal variability, or 80 % or fewer agree on the sign of the change).
+a robust signal: fewer than 70 % of the models show a change larger than internal
+variability (threshold sqrt(2) * 1.645 * sd / sqrt(20), sd the interannual standard
+deviation over the baseline, as in the IPCC AR6 advanced method). This rule reproduces
+the dots of the printed figure best (robustness threshold 0.7 in snow.py).
 
 Reproduce it from scratch in three steps (Python 3.10 or newer):
 
@@ -82,3 +84,22 @@ Atlas repository. Scientific Data 9, 629, doi:10.1038/s41597-022-01739-y.
 
 
 License: MIT (code). Data: CC BY 4.0 (IPCC Atlas dataset).
+
+
+Snow water equivalent at the same warming levels (CMIP6, ESGF)
+--------------------------------------------------------------
+
+The IPCC Atlas has no snow water equivalent (SWE). These scripts take CMIP6 monthly SWE
+(snw, table LImon) from ESGF for every model of the Atlas warming-level table, cut out
+Central Asia over OPeNDAP, and apply the same warming-level windows and 1981-2010 baseline:
+
+  python fetch_esgf_snw.py CMIP6_Atlas_WarmingLevels.csv esgf
+  curl ... ERA5 geopotential (any one time) for the elevation masks, see swe_gwl.py
+  python swe_gwl.py esgf CMIP6_Atlas_WarmingLevels.csv era5_orography.nc derived swe_out
+  python swe_figure.py esgf CMIP6_Atlas_WarmingLevels.csv derived figures
+
+swe_gwl.py writes the change in annual mean SWE, peak SWE (annual maximum of monthly SWE)
+and snowfall for the mountains of the five Central Asian countries (above 1500 m and
+2000 m) and for elevations below 2000 m. Cells with snow all year (glaciers in the models)
+are left out. swe_figure.py maps the multi-model median change in annual mean SWE and shows
+Kazakhstan means of snowfall, annual mean SWE and peak SWE for every model.

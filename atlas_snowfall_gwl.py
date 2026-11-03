@@ -151,6 +151,9 @@ def main(data_dir, gwl_csv, out_dir):
                 "baseline_mean": base.mean("member"),
                 "robust": simple,
                 "advanced": advanced,
+                "share_signal": share_signal,                     # % of models with |delta| > threshold
+                "share_agree": 100 * xr.where(delta.mean("member") >= 0, (delta > 0).sum("member"),
+                                              (delta < 0).sum("member")) / delta.sizes["member"],
                 "central_year": central,
             })
             ds["rel_mean"] = 100 * ds.delta_mean / ds.baseline_mean.where(ds.baseline_mean > 0)

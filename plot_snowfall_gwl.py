@@ -52,7 +52,9 @@ def decorate(ax):
 
 def stipple(ax, ds, size=0.6):
     lon2, lat2 = np.meshgrid(ds.lon, ds.lat)
-    nr = ds.advanced.values != 1          # no robust signal or conflicting signals
+    # dots where fewer than 70 % of the models show a change larger than internal variability;
+    # this rule reproduces the dots of the printed Fig. 2.8 best (robustness threshold 0.7 in snow.py)
+    nr = ds.share_signal.values < 70
     ax.scatter(lon2[nr], lat2[nr], s=size, c="k", marker="o", linewidths=0, transform=PC, zorder=3)
 
 
