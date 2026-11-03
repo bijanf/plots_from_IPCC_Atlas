@@ -1,0 +1,15 @@
+name: atlas
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - xarray
+  - netcdf4
+  - dask
+  - pandas
+  - matplotlib
+  - cartopy
+  - regionmask
+  - cdsapi
+  - cftime
+  - pillow
