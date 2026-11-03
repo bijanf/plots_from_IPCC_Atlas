@@ -94,7 +94,9 @@ The IPCC Atlas has no snow water equivalent (SWE). These scripts take CMIP6 mont
 Central Asia over OPeNDAP, and apply the same warming-level windows and 1981-2010 baseline:
 
   python fetch_esgf_snw.py CMIP6_Atlas_WarmingLevels.csv esgf
-  curl ... ERA5 geopotential (any one time) for the elevation masks, see swe_gwl.py
+  ERA5 geopotential for the elevation masks: CDS dataset reanalysis-era5-single-levels,
+  variable geopotential, one time step (e.g. 2020-01-01 00:00), area 60N 40E 25S 95E,
+  saved as era5_orography.nc
   python swe_gwl.py esgf CMIP6_Atlas_WarmingLevels.csv era5_orography.nc derived swe_out
   python swe_figure.py esgf CMIP6_Atlas_WarmingLevels.csv derived figures
 
