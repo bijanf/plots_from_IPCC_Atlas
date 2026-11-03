@@ -15,7 +15,7 @@ def plot_snow_changes_with_robustness(
     robustness = xr.open_dataset(robustness_file)
 
     # Extract variables
-    data_values = data['prsn_anom']  # Snow anomaly variable
+    data_values = data['prsn_anom']  # change in snowfall (mm/day water equivalent), multi-model mean
     robustness_values = robustness['prsn_anom_robustness']  # Robustness variable
 
     # Define bounding box for Central Asia
@@ -26,15 +26,15 @@ def plot_snow_changes_with_robustness(
     data_values = data_values.sel(lon=slice(lon_min, lon_max), lat=slice(lat_min, lat_max))
     robustness_values = robustness_values.sel(lon=slice(lon_min, lon_max), lat=slice(lat_min, lat_max))
 
-    # Define a robustness mask (non-robust regions)
+    # Robustness from the Interactive Atlas download; cells below the threshold have no robust signal
     robustness_mask = robustness_values < robustness_threshold  # Non-robust where robustness < threshold
 
     # Create grid for plotting
     lon, lat = np.meshgrid(data_values['lon'], data_values['lat'])
 
-    # Define colormap with 10 discrete colors (blue to white to brown for snow changes)
-    cmap = plt.get_cmap('BrBG', 14)  # 10 discrete colors, centered on 0
-    norm = BoundaryNorm(np.linspace(vmin, vmax, 15), cmap.N)  # Define boundaries for 10 intervals
+    # 14 discrete BrBG colours centred on zero
+    cmap = plt.get_cmap('BrBG', 14)
+    norm = BoundaryNorm(np.linspace(vmin, vmax, 15), cmap.N)
 
     # Plotting
     fig, ax = plt.subplots(subplot_kw={'projection': ccrs.PlateCarree()}, figsize=(10, 6))
@@ -42,7 +42,7 @@ def plot_snow_changes_with_robustness(
     # Use pcolor for the data values
     pcm = ax.pcolor(lon, lat, data_values, cmap=cmap, norm=norm, transform=ccrs.PlateCarree())
 
-    # Add red dots for non-robust areas
+    # Black dots mark non-robust cells
     ax.scatter(
         lon[robustness_mask], lat[robustness_mask], color='black',
         s=1, transform=ccrs.PlateCarree(), label='Non-robust'
@@ -74,8 +74,8 @@ plot_snow_changes_with_robustness(
     data_file='snow_4/map.nc',
     robustness_file='snow_4/robustness.nc',
     output_file='snow_anomaly_central_asia_ssp5_8_5_4C_with_robustness.png',
-    title='Snow Anomaly Changes with Robustness (SSP5-8.5, 4°C Warming, 1995-2014 Ref.) - Annual (18 Models)',
-    label='Snow Anomaly (mm/day)',
+    title='Snowfall change, dots: no robust signal (SSP5-8.5, +4°C, 1981-2010 ref.), annual, 18 models',
+    label='Snowfall change (mm/day water equivalent)',
     vmin=-.7, vmax=.7
 )
 # Example usage for snow_3
@@ -83,8 +83,8 @@ plot_snow_changes_with_robustness(
     data_file='snow_3/map.nc',
     robustness_file='snow_3/robustness.nc',
     output_file='snow_anomaly_central_asia_ssp3_7_0_3C_with_robustness.png',
-    title='Snow Anomaly Changes with Robustness (SSP3-7.0, 3°C Warming, 1995-2014 Ref.) - Annual (23 Models)',
-    label='Snow Anomaly (mm/day)',
+    title='Snowfall change, dots: no robust signal (SSP3-7.0, +3°C, 1981-2010 ref.), annual, 23 models',
+    label='Snowfall change (mm/day water equivalent)',
     vmin=-.7, vmax=.7
 )
 
@@ -93,7 +93,7 @@ plot_snow_changes_with_robustness(
     data_file='snow_2/map.nc',
     robustness_file='snow_2/robustness.nc',
     output_file='snow_anomaly_central_asia_ssp2_4_5_2C_with_robustness.png',
-    title='Snow Anomaly Changes with Robustness (SSP2-4.5, 2°C Warming, 1995-2014 Ref.) - Annual (29 Models)',
-    label='Snow Anomaly (mm/day)',
+    title='Snowfall change, dots: no robust signal (SSP2-4.5, +2°C, 1981-2010 ref.), annual, 29 models',
+    label='Snowfall change (mm/day water equivalent)',
     vmin=-.7, vmax=.7
 )

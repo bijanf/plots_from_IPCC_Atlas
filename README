@@ -1,0 +1,84 @@
+IPCC Atlas plots for Central Asia
+=================================
+
+Python scripts for the maps of observed trends and projected changes over Central Asia
+(45-90 E, 30-56 N) in B. Fallah, "Climate Change in Central Asia and Expected Impacts",
+in Towards Sustainable Future of Central Asia, Advances in Global Change Research 84,
+Springer, doi:10.1007/978-3-032-29989-5_2.
+
+All data come from the IPCC AR6 WGI Interactive Atlas (https://interactive-atlas.ipcc.ch)
+or from the dataset behind it on the Copernicus Climate Data Store,
+"Gridded monthly climate projection dataset underpinning the IPCC AR6 Interactive Atlas",
+doi:10.24381/cds.5292a2b0 (CC BY 4.0).
+
+
+Snowfall at global warming levels (book Fig. 2.8)
+-------------------------------------------------
+
+Fig. 2.8 shows the change in annual mean snowfall (mm per day, water equivalent) at
++2 degC (SSP2-4.5, 29 models), +3 degC (SSP3-7.0, 23 models) and +4 degC (SSP5-8.5,
+18 models) relative to 1981-2010, CMIP6 multi-model mean. Dots mark grid cells without
+a robust signal (IPCC AR6 advanced method: 66 % or fewer of the models show a change
+larger than internal variability, or 80 % or fewer agree on the sign of the change).
+
+Reproduce it from scratch in three steps (Python 3.10 or newer):
+
+  conda create -n atlas -c conda-forge python=3.12 xarray netcdf4 dask pandas \
+        matplotlib cartopy regionmask cdsapi
+  conda activate atlas
+
+  1. Download CMIP6 snowfall (about 5 GB). Needs a free CDS account, the dataset licence
+     accepted on its web page, and the API key in ~/.cdsapirc:
+         python download_atlas_snowfall.py data
+  2. Get the official warming-level table and compute the changes:
+         curl -LO https://raw.githubusercontent.com/IPCC-WG1/Atlas/main/warming-levels/CMIP6_Atlas_WarmingLevels.csv
+         python atlas_snowfall_gwl.py data CMIP6_Atlas_WarmingLevels.csv derived
+  3. Plot:
+         python plot_snowfall_gwl.py derived figures
+
+Outputs:
+  derived/prsn_gwl{2,3,4}_<scenario>_base<period>.nc
+      delta (per model), delta_mean, baseline_mean, rel_mean (percent), robust
+      (simple method, 1 = more than 80 % sign agreement), advanced (1 robust signal,
+      2 no change or no robust signal, 3 conflicting signals), central_year
+  derived/country_means_per_model.csv
+      area-weighted country means for Kazakhstan, Kyrgyzstan, Tajikistan, Uzbekistan
+      and Turkmenistan, one row per model
+  figures/snowfall_gwl_central_asia.pdf/.png
+      absolute and relative change, robustness dots, country means
+  figures/snowfall_gwl_book_style_check.pdf/.png
+      the printed colour scale for the 1981-2010 and 1995-2014 baselines
+
+Method (as in github.com/IPCC-WG1/Atlas): each model's change is its mean over the
+20-year window [n-9, n+10] around the year n in which it reaches the warming level
+(relative to 1850-1900) minus its baseline mean; maps show the multi-model mean.
+
+Note: the CDS copy of the CMIP6 SSP3-7.0 snowfall file (product v2.0-final) holds
+monthly totals although its metadata say daily means. atlas_snowfall_gwl.py compares
+every scenario with the historical run and divides by the number of days in the month
+when the ratio shows monthly totals.
+
+
+Other scripts
+-------------
+
+  pr.py               precipitation trend 1980-2015 with significance (pr/map.nc, pr/pvalue.nc)
+  plot_figur_temp.py  temperature trend 1980-2015 with significance (tas/map.nc, tas/pvalue.nc)
+  snow.py             the original Fig. 2.8 plot from Interactive Atlas downloads
+                      (snow_2/, snow_3/, snow_4/ with map.nc and robustness.nc)
+  central_asia.py     topography map from ETOPO1
+
+
+Citation for the data
+---------------------
+
+Gutierrez, J.M., et al., 2021: Atlas. In: Climate Change 2021: The Physical Science
+Basis. Contribution of Working Group I to the Sixth Assessment Report of the IPCC.
+Cambridge University Press, 1927-2058, doi:10.1017/9781009157896.021.
+Interactive Atlas available from http://interactive-atlas.ipcc.ch
+
+Iturbide, M., et al., 2022: Implementation of FAIR principles in the IPCC: the WGI AR6
+Atlas repository. Scientific Data 9, 629, doi:10.1038/s41597-022-01739-y.
+
+
+License: MIT (code). Data: CC BY 4.0 (IPCC Atlas dataset).
